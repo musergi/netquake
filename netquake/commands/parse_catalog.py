@@ -5,7 +5,7 @@ from obspy.io.nordic.core import read_nordic
 
 
 def run(input_path, output_path):
-    catalog = read_catalog(input_path)
+    catalog = read_catalog(input_path[0])
     data = {'magnitud': [], 'time': [], 'network_code':[], 'station_code':[], 'channel_code':[]}
     for event in tqdm.tqdm(catalog):
         magnitud = event.magnitudes[0].mag if event.magnitudes else None
@@ -16,7 +16,7 @@ def run(input_path, output_path):
             data['station_code'].append(pick.waveform_id.station_code)
             data['channel_code'].append(pick.waveform_id.channel_code)
     df = pd.DataFrame(data)
-    df.to_csv(output_path)
+    df.to_csv(output_path[0])
     
 
 def read_catalog(filepath: str):
