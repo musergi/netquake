@@ -26,3 +26,4 @@ def run(input_paths, output_paths):
         for trace in file_stream:
             if contains_event(trace, df):
                 trace.write(os.path.join(dump_folder, f'{index}.mseed'), format='MSEED')
+                index += 1
