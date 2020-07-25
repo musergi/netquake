@@ -73,7 +73,7 @@ def run(inputs, outputs):
         index = 1
         while noise_start > start:
             noise_slice = trace.slice(noise_start, noise_start + window_size)
-            noise_slice = trace.write(os.path.join(noise_folder, f'{signal_id}_{index}.mseed'))
+            noise_slice.write(os.path.join(noise_folder, f'{signal_id}_{index}.mseed'))
 
             noise_start -= window_size
             index += 1
