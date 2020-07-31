@@ -2,17 +2,22 @@
 ## Datasets
 ## Usage
 
-In order to parse the nordic catalog we run the command:
+The first step is to take the event catalog, take all the picks from it associated with the Z component, and save them in a simpler CSV format:
 ```bash
-python -m netquake parse_catalog --input <path-to-nordic-file> --output <output-file-path>
+python -m netquake parse_catalog <input-nordic-path> <output-csv-path>
 ```
 
-In order to filter the traces to only get the ones containing events:
+The second step is to only take the traces containing events and corresponding to the Z component:
 ```bash
-python -m netquake get_eventfull_traces --input <path-to-csv-catalog> <path-to-trace-folder> --output <dump-folder-path>
+python -m netquake filter_traces <input-csv-catalog-path> <trace-folder-path> <output-folder-path>
 ```
 
-In order to slice into windows and save them on different folders if they contain an event or not:
+The third step is to adapt the traces so they can have an easier input for the neural network, this involves applying a bandpass filter and normalizing the signals:
 ```bash
-python -m netquake gen_windows --input <catalog-path> <eventfull-trace-folder-path> <window-size-seconds> <event-position> --output <destination-folder>
+python -m netquake adapt_traces <trace-folder-path> <output-folder-path> <band-min-freq> <band-max-freq>
+```
+
+The fourth step is to slice into windows and save them on different folders if they contain an event or not:
+```bash
+python -m netquake gen_windows <catalog-path> <eventfull-trace-folder-path> <destination-folder> <window-size-seconds> <event-position>
 ```
