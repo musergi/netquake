@@ -3,6 +3,7 @@
 *.py[co]
 
 /.vscode
+/.idea
 .DS_Store
 
 /input/**
