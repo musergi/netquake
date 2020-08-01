@@ -12,7 +12,7 @@ The second step is to only take the traces containing events and corresponding t
 python -m netquake filter_traces <input-csv-catalog-path> <trace-folder-path> <output-folder-path>
 ```
 
-The third step is to adapt the traces so they can have an easier input for the neural network, this involves applying a bandpass filter and normalizing the signals:
+The third step is to adapt the traces so they can have an easier input for the neural network, this involves applying a bandpass filter and normalizing the signals. Frequencies are passed in Hertz:
 ```bash
 python -m netquake adapt_traces <trace-folder-path> <output-folder-path> <band-min-freq> <band-max-freq>
 ```
@@ -20,4 +20,9 @@ python -m netquake adapt_traces <trace-folder-path> <output-folder-path> <band-m
 The fourth step is to slice into windows and save them on different folders if they contain an event or not:
 ```bash
 python -m netquake gen_windows <catalog-path> <eventfull-trace-folder-path> <destination-folder> <window-size-seconds> <event-position>
+```
+
+For viewing the signals:
+```bash
+python -m netquake display_traces <trace-folder-path> <trace-count>
 ```
