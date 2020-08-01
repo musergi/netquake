@@ -5,12 +5,10 @@ from netquake.trace import WindowWriter
 from netquake.catalog import Catalog
 
 
-def run(inputs, outputs):
-	catalog_path, signal_folder, window_size, event_start_offset = inputs
-	folder = outputs[0]
+def run(catalog_path, signal_folder, output_folder, window_size, event_start_offset):
 
 	window_writer = WindowWriter(
-		folder=folder,
+		folder=output_folder,
 		window_size=window_size,
 		event_start_offset=event_start_offset)
 
