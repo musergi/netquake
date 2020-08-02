@@ -1,7 +1,5 @@
 import os
-import random
 import obspy
-import tqdm
 import numpy as np
 
 
@@ -10,31 +8,26 @@ class DatasetBuilder:
     EVENT_LABEL = 1
 
     def __init__(self):
-        self.events = []
-        self.noises = []
+        self.signals = []
+        self.labels = []
 
     def consume_events(self, folder):
         for path in _get_all_filepaths(folder):
-            self.events.append(_get_trace_data(path))
+            self.signals.append(_get_trace_data(path))
+            self.labels.append(DatasetBuilder.EVENT_LABEL)
 
     def consume_noises(self, folder):
         for path in _get_all_filepaths(folder):
-            self.noises.append(_get_trace_data(path))
+            self.signals.append(_get_trace_data(path))
+            self.labels.append(DatasetBuilder.NOISE_LABEL)
 
     def generate(self):
-        x, y = np.array([]), np.array([])
-        for signal, label in tqdm.tqdm(self._get_random_pairs()):
-            x = np.append(x, signal, axis=0)
-            y = np.append(y, label)
-        return np.array(x), np.array(y)
+        return np.array(self.signals), np.array(self.labels)
 
-    def _get_random_pairs(self):
-        pairs = []
-        for event, noise in zip(self.events, self.noises):
-            pairs.append([event, DatasetBuilder.EVENT_LABEL])
-            pairs.append([event, DatasetBuilder.NOISE_LABEL])
-        random.shuffle(pairs)
-        return pairs
+    def generate_shuffled(self):
+        x, y = self.generate()
+        permutation = np.random.permutation(len(x))
+        return x[permutation], y[permutation]
 
 
 def _get_all_filepaths(folder):
