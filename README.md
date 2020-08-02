@@ -22,6 +22,11 @@ The fourth step is to slice into windows and save them on different folders if t
 python -m netquake gen_windows <catalog-path> <eventfull-trace-folder-path> <destination-folder> <window-size-seconds> <event-position>
 ```
 
+The fifth step is to pack all the datasets into a pickle:
+```bash
+python -m netquake gen_dataset <output-pickle-path> <trace-folder-paths>
+```
+
 For viewing the signals:
 ```bash
 python -m netquake display_traces <trace-folder-path> <trace-count>
