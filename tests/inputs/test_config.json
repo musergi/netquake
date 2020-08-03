@@ -1,0 +1,4 @@
+{
+  "dataset_path": "inputs/test_dataset.pickle",
+  "epochs": 10
+}

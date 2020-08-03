@@ -31,3 +31,8 @@ For viewing the signals:
 ```bash
 python -m netquake display_traces <trace-folder-path> <trace-count>
 ```
+
+To train a network:
+```bash
+python -m netquake train_network <config-json-file> <network-json-file>
+```
