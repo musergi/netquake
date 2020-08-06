@@ -33,12 +33,12 @@ class DatasetBuilder:
                 self.signals[i] = _zero_pad_to_length(signal, max_shape)
 
     def _balance(self):
-        event_count = np.count_nonzero(np.array(self.labels) == DatasetBuilder.EVENT_LABEL)
-        noise_count = np.count_nonzero(np.array(self.labels) == DatasetBuilder.NOISE_LABEL)
-        remove_indices = np.nonzero(np.array(self.labels) == DatasetBuilder.NOISE_LABEL)
-        remove_indices = (remove_indices[0][:noise_count-event_count],)
-        self.signals = np.delete(self.signals, remove_indices, axis=0)
-        self.labels = np.delete(self.labels, remove_indices, axis=0)
+        event_indices = np.nonzero(np.array(self.labels) == DatasetBuilder.EVENT_LABEL)[0]
+        noise_indices = np.nonzero(np.array(self.labels) == DatasetBuilder.NOISE_LABEL)[0]
+        keep_noise_indices = (noise_indices[:len(event_indices)],)
+        keep_indices = (np.concatenate((event_indices, keep_noise_indices)),)
+        self.signals = np.array(self.signals)[keep_indices]
+        self.labels = np.array(self.labels)[keep_indices]
 
     def generate_shuffled(self):
         x, y = self.generate()

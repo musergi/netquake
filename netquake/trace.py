@@ -11,7 +11,7 @@ class TraceWriter:
 		self.folder = folder
 		os.makedirs(self.folder, exist_ok=True)
 
-	def write(self, trace:Trace):
+	def write(self, trace: Trace):
 		trace.write(self._get_unique_filepath(trace))
 
 	def _get_unique_filepath(self, trace:Trace):
@@ -29,8 +29,7 @@ class WindowWriter:
 		self.window_size = int(window_size)
 		self.event_start_offset = float(event_start_offset)
 
-	def write_windows(self, trace, catalog:Catalog):
-		trace.normalize()
+	def write_windows(self, trace, catalog: Catalog):
 		pick_times = _get_picks_in_trace(trace, catalog)
 		event_window_starts = [self._get_event_window_start(pick_time) for pick_time in pick_times]
 		noise_window_starts = self._get_noise_windows_start(min(event_window_starts), trace)
@@ -63,6 +62,7 @@ class WindowWriter:
 def get_trace_component(trace: Trace):
 	return trace.stats.channel[2]
 
+
 def _get_pick_in_trace(trace, catalog:Catalog) -> UTCDateTime:
 	picks = catalog.get_trace_picks(trace)
 	if len(picks) != 1:
@@ -73,7 +73,8 @@ def _get_pick_in_trace(trace, catalog:Catalog) -> UTCDateTime:
 	pick_time = UTCDateTime(pd.to_datetime(picks.iloc[0]['time'], utc=True))
 	return pick_time
 
-def _get_picks_in_trace(trace, catalog:Catalog) -> list:
+
+def _get_picks_in_trace(trace, catalog: Catalog) -> list:
 	times = []
 	picks = catalog.get_trace_picks(trace)
 	for pick in picks.itertuples():
