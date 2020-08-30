@@ -6,15 +6,18 @@ from tensorflow.keras.models import model_from_json
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import BinaryCrossentropy
 from tensorflow.keras.callbacks import Callback
-from sklearn.metrics import confusion_matrix
+from tensorflow.keras.metrics import TruePositives, TrueNegatives, FalsePositives, FalseNegatives
 
 
 class ReportCallback(Callback):
-    def __init__(self, dump_list):
-        self.dump_list = dump_list
+    def __init__(self):
+        self.dump_list = []
 
     def on_epoch_end(self, epoch, logs=None):
         self.dump_list.append({'epoch': epoch, **logs})
+
+    def get_dataframe(self):
+        return pd.DataFrame(self.dump_list)
 
 
 class ExperimentRunner:
@@ -29,27 +32,29 @@ class ExperimentRunner:
             config = json.load(config_file)
             self.dataset_path = config['dataset_path']
             self.epochs = config['epochs']
+            self.dump_path = config['result_path']
 
     def _compile_model(self):
         self.model.compile(
             optimizer=Adam(),
             loss=BinaryCrossentropy(),
-            metrics=['accuracy']
+            metrics=['accuracy', TruePositives(), TrueNegatives(), FalsePositives(), FalseNegatives()]
         )
+        self.model.summary()
 
     def run(self):
         dataset = None
         with open(self.dataset_path, 'rb') as dataset_file:
             dataset = pickle.load(dataset_file)
-        reports = []
+        reports = ReportCallback()
         self.model.fit(
             *dataset,
             batch_size=1,
             epochs=self.epochs,
             validation_split=0.1,
-            callbacks=[ReportCallback(reports)]
+            callbacks=[reports]
         )
-        return pd.DataFrame(reports)
+        reports.get_dataframe().to_csv(self.dump_path)
 
 
 def run(config, model):
@@ -57,5 +62,4 @@ def run(config, model):
         config_path=config,
         model_path=model
     )
-    result = experiment_runner.run()
-    print(result)
+    experiment_runner.run()
