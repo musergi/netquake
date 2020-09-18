@@ -33,6 +33,7 @@ class ExperimentRunner:
             self.dataset_path = config['dataset_path']
             self.epochs = config['epochs']
             self.dump_path = config['result_path']
+            self.net_save_path = config['network_path']
 
     def _compile_model(self):
         self.model.compile(
@@ -54,6 +55,7 @@ class ExperimentRunner:
             validation_split=0.1,
             callbacks=[reports]
         )
+        self.model.save(self.net_save_path)
         reports.get_dataframe().to_csv(self.dump_path)
 
 
