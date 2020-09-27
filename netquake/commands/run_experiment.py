@@ -6,7 +6,7 @@ from tensorflow.keras.models import model_from_json
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import BinaryCrossentropy
 from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.metrics import TruePositives, TrueNegatives, FalsePositives, FalseNegatives
+from tensorflow.keras.metrics import TruePositives, TrueNegatives, FalsePositives, FalseNegatives, AUC
 
 
 class ReportCallback(Callback):
@@ -39,7 +39,7 @@ class ExperimentRunner:
         self.model.compile(
             optimizer=Adam(),
             loss=BinaryCrossentropy(),
-            metrics=['accuracy', TruePositives(), TrueNegatives(), FalsePositives(), FalseNegatives()]
+            metrics=['accuracy', TruePositives(), TrueNegatives(), FalsePositives(), FalseNegatives(), AUC()]
         )
         self.model.summary()
 
