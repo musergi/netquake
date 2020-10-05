@@ -1,5 +1,4 @@
 # Netquake
-## Datasets
 ## Usage
 
 The first step is to take the event catalog, take all the picks from it associated with the Z component, and save them in a simpler CSV format:
@@ -35,4 +34,9 @@ python -m netquake display_traces <trace-folder-path> <trace-count>
 To train a network:
 ```bash
 python -m netquake run_experiment <config-json-file> <network-json-file>
+```
+
+To use a trained network:
+```bash
+python -m netquake apply_network <network-h5-file> <filtered-mseed-file>
 ```
