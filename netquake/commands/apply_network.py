@@ -1,7 +1,15 @@
+import enum
+from numpy.core.numeric import roll
 import obspy
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
+
+
+def initial_zero_padding(arr: np.ndarray, padding: int) -> np.ndarray:
+    padded_arr = np.zeros(len(arr) + padding)
+    padded_arr[padding:] = arr
+    return padded_arr
 
 
 def smoothed(array, window_size):
@@ -21,23 +29,20 @@ def rolling_window(a, window, step_size):
 def run(network_path, trace_path):
     trace = obspy.read(trace_path)[0]
     model = load_model(network_path)
-    print('InputShape', model.layers[0].input_shape)
 
-    print('Data shape', trace.data.shape)
     rolled = rolling_window(trace.data, 3001, 1)
     rolled = np.reshape(rolled, (rolled.shape[0],) + model.layers[0].input_shape[1:])
-    print('Rolled data shape', rolled.shape)
 
     result = model.predict(rolled)
-    print('Result shape', result.shape)
     result = np.reshape(result, result.shape[:-1])
+    result = initial_zero_padding(result, len(trace.data) - len(result))
 
-    plt.subplot(4, 1, 1)
-    plt.plot(trace.data)
-    plt.subplot(4, 1, 2)
-    plt.plot(result)
-    plt.subplot(4, 1, 3)
-    plt.plot(smoothed(result, 16))
-    plt.subplot(4, 1, 4)
-    plt.plot(smoothed(result, 64))
+    plots = [trace.data]
+    plots.append(result)
+    plots.append(smoothed(initial_zero_padding(result, 16), 16))
+    plots.append(smoothed(initial_zero_padding(result, 64), 64))
+
+    for index, data in enumerate(plots):
+        plt.subplot(len(plots), 1, index + 1)
+        plt.plot(data)
     plt.show()
