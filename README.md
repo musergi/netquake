@@ -40,3 +40,22 @@ To use a trained network:
 ```bash
 python -m netquake apply_network <network-h5-file> <filtered-mseed-file>
 ```
+
+## Example
+
+```json
+{
+  "dataset_path": "dataset/windows/",
+  "epochs": 10,
+  "result_path": "results/result.csv",
+  "network_path": "networks/trained.h5"
+}
+```
+
+```bash
+python -m netquake parse_catalog dataset/catalog.nordic dataset/catalog.csv
+python -m netquake filter_traces dataset/catalog.csv dataset/mseed/ dataset/eventful_mseed/
+python -m netquake adapt_traces dataset/eventful_mseed/ dataset/filtered_mseed/ 0.5 10
+python -m netquake gen_windows dataset/catalog.csv dataset/filtered_mseed/ dataset/windows/ 30 0.25
+python -m netquake run_experiment experiment.json networks/mynet.json
+```
