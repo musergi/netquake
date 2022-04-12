@@ -43,6 +43,22 @@ python -m netquake apply_network <network-h5-file> <filtered-mseed-file>
 
 ## Example
 
+The first step is to create the network we want to use using Tensorflow and save it in JSON format.
+
+```python
+import tensorflow as tf
+model = tf.keras.Sequential()
+model.add(tf.keras.layers.Dense(128, activation='relu', input_shape=(3001,))
+model.add(tf.keras.layers.Dense(16, activation='relu')
+model.add(tf.keras.layers.Dense(16, activation='relu')
+model.add(tf.keras.layers.Dense(32, activation='relu')
+model.add(tf.keras.layers.Dense(32, activation='sigmoid')
+model.to_json('networks/mynet.json')
+```
+
+We create then an experiment configuration.
+
+
 ```json
 {
   "dataset_path": "dataset/windows/",
@@ -51,6 +67,9 @@ python -m netquake apply_network <network-h5-file> <filtered-mseed-file>
   "network_path": "networks/trained.h5"
 }
 ```
+
+Finally we can run the entire pipeline.
+
 
 ```bash
 python -m netquake parse_catalog dataset/catalog.nordic dataset/catalog.csv
